@@ -1,0 +1,18 @@
+:root {
+    --border-radius: 10px;
+    --controls-transition-duration: 0.3s;
+  }
+  
+  .VideoPlayer {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 20px;
+    margin: 0 auto;
+    margin-top: 100px;
+  }
+
+  video {
+      width: 100%;
+      border-radius: 20px;
+  }
