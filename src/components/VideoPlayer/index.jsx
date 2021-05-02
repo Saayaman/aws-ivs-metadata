@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import Placeholder from '../Placeholder';
+import PlayerControls from '../PlayerControls'
+
 import './style.css';
 
 const VideoPlayer = ({ playbackUrl }) => {
@@ -9,7 +11,7 @@ const VideoPlayer = ({ playbackUrl }) => {
     const [loading, setLoading] = useState(true);
 
     const player = useRef(null)
-    const [muted, setMuted] = useState(false);
+    const [muted, setMuted] = useState(true);
 
     useEffect(() => {
         if (!player.current) return;
@@ -25,7 +27,6 @@ const VideoPlayer = ({ playbackUrl }) => {
             console.warn('The Current browser does not support the Amazon IVS player')
             return;
         }
-        
         
         const onError = (err) => {
             console.warn('Player Event - ERROR:', err);
@@ -59,11 +60,30 @@ const VideoPlayer = ({ playbackUrl }) => {
         return null;
     }
 
+    //Player controls func
+    const close = (e) => {
+        player.current.pause();
+    }
+    const toggleMute = (e) => {
+        console.log('toggleMute');
+        const shouldMute = !player.current.isMuted();
+    
+        player.current.setMuted(shouldMute);
+        setMuted(shouldMute);
+      };
+
+
     console.log('loading', loading);
+    console.log('muted', muted);
   return (
       <div className="VideoPlayer">
           <Placeholder loading={loading} />
           <video ref={videoRef} id="video-player" playsInline></video>
+          <PlayerControls
+              muted={muted}
+              onClose={close}
+              onMute={toggleMute}
+            />
       </div>
   );
   

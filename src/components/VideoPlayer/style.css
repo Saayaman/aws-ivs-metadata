@@ -1,8 +1,4 @@
-:root {
-    --border-radius: 10px;
-    --controls-transition-duration: 0.3s;
-  }
-  
+
   .VideoPlayer {
     position: relative;
     width: 100%;
