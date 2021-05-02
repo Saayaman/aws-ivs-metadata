@@ -7,13 +7,15 @@ const VideoPlayer = ({ playbackUrl }) => {
     const { IVSPlayer } = window;
     const { isPlayerSupported } = IVSPlayer;
     const [loading, setLoading] = useState(true);
-    // const [muted, setMuted] = useState(false);
 
-    // useEffect(() => {
-    //     if (!player.current) return;
+    const player = useRef(null)
+    const [muted, setMuted] = useState(false);
+
+    useEffect(() => {
+        if (!player.current) return;
     
-    //     setMuted(player.current.isMuted());
-    // }, [loading]);
+        setMuted(player.current.isMuted());
+    }, [loading]);
 
     useEffect(() => {
         const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState;
@@ -24,28 +26,32 @@ const VideoPlayer = ({ playbackUrl }) => {
             return;
         }
         
+        
+        const onError = (err) => {
+            console.warn('Player Event - ERROR:', err);
+        };
+        
+        // 1. initialize ivs player
+        // const player = IVSPlayer.create();
+        // player.attachHTMLVideoElement(videoRef.current);
+        // player.load(playbackUrl);
+        // player.play();
+        player.current = IVSPlayer.create()
+        player.current.attachHTMLVideoElement(videoRef.current);
+        player.current.load(playbackUrl);
+        player.current.play();
+        
         const onStateChange = () => {
-            const playerState = player.getState();
+            const playerState = player.current.getState();
     
             console.log(`Player State - ${playerState}`);
             setLoading(playerState !== PLAYING);
         };
-
-        const onError = (err) => {
-            console.warn('Player Event - ERROR:', err);
-          };
-
-        // 1. initialize ivs player
-        const player = IVSPlayer.create();
-        player.attachHTMLVideoElement(videoRef.current);
-        player.load(playbackUrl);
-        player.play();
-
         // 2. update video state
-        player.addEventListener(READY, onStateChange);
-        player.addEventListener(PLAYING, onStateChange);
-        player.addEventListener(ENDED, onStateChange);
-        player.addEventListener(ERROR, onError);
+        player.current.addEventListener(READY, onStateChange);
+        player.current.addEventListener(PLAYING, onStateChange);
+        player.current.addEventListener(ENDED, onStateChange);
+        player.current.addEventListener(ERROR, onError);
     }, [IVSPlayer, isPlayerSupported, playbackUrl])
 
 
